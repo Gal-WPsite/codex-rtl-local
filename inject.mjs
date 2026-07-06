@@ -42,7 +42,7 @@ async function getTargets() {
   try {
     response = await fetch(endpoint);
   } catch {
-    throw new Error(`Cannot reach ${endpoint}. Start Codex with ./codex-rtl-local/run.sh first.`);
+    throw new Error(`Cannot reach ${endpoint}. Start Codex with the macOS or Windows launcher first.`);
   }
 
   if (!response.ok) {
