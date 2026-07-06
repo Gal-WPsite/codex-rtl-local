@@ -1,0 +1,42 @@
+#!/bin/sh
+
+set -eu
+
+SCRIPT_DIR=$(CDPATH= cd -- "$(dirname "$0")" && pwd)
+ROOT=$(CDPATH= cd -- "$SCRIPT_DIR/../../.." && pwd)
+NODE="${CODEX_RTL_NODE:-/opt/homebrew/bin/node}"
+PORT="${CODEX_RTL_PORT:-9223}"
+LOG="${TMPDIR:-/tmp}/codex-rtl-local.log"
+ENDPOINT="http://127.0.0.1:${PORT}/json"
+
+notify() {
+  /usr/bin/osascript -e "display notification \"$1\" with title \"Codex RTL\"" >/dev/null 2>&1 || true
+}
+
+dialog() {
+  /usr/bin/osascript -e "display dialog \"$1\" buttons {\"OK\"} default button \"OK\" with title \"Codex RTL\"" >/dev/null 2>&1 || true
+}
+
+endpoint_ready() {
+  /usr/bin/curl --silent --fail --max-time 1 "$ENDPOINT" >/dev/null 2>&1
+}
+
+if [ ! -x "$NODE" ]; then
+  dialog "Node was not found at $NODE. Install Node 22+ or set CODEX_RTL_NODE."
+  exit 1
+fi
+
+if endpoint_ready; then
+  notify "Codex RTL injector is running."
+  nohup "$NODE" "$ROOT/inject.mjs" --watch >> "$LOG" 2>&1 &
+  exit 0
+fi
+
+if /usr/bin/pgrep -x "Codex" >/dev/null 2>&1; then
+  dialog "Codex is already open without the RTL launcher. Close Codex, then open Codex RTL again."
+  exit 1
+fi
+
+notify "Starting Codex with RTL support..."
+nohup /bin/sh "$ROOT/run.sh" >> "$LOG" 2>&1 &
+exit 0
