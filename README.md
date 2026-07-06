@@ -49,7 +49,7 @@ If you prefer to let Codex install it, give Codex this prompt:
 Install this local Codex RTL helper:
 https://github.com/Gal-WPsite/codex-rtl-local
 
-Clone it to ~/Projects/codex-rtl-local.
+Clone it to a convenient local folder.
 Read the README before running anything.
 Do not modify /Applications/Codex.app.
 After cloning, close Codex and run sh ./run.sh from the repo folder.
