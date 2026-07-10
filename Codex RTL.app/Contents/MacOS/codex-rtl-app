@@ -32,8 +32,8 @@ if endpoint_ready; then
   exit 0
 fi
 
-if /usr/bin/pgrep -x "Codex" >/dev/null 2>&1; then
-  dialog "Codex is already open without the RTL launcher. Close Codex, then open Codex RTL again."
+if /usr/bin/pgrep -f 'ChatGPT.app' >/dev/null 2>&1 || /usr/bin/pgrep -f 'Codex.app' >/dev/null 2>&1; then
+  dialog "Codex or ChatGPT is already open without the RTL launcher. Close it, then open Codex RTL again."
   exit 1
 fi
 

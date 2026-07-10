@@ -3,8 +3,8 @@
 set -eu
 
 PORT="${CODEX_RTL_PORT:-9223}"
-APP_PATH="${CODEX_APP_PATH:-/Applications/Codex.app}"
-EXECUTABLE="$APP_PATH/Contents/MacOS/Codex"
+APP_PATH="${CODEX_APP_PATH:-}"
+EXECUTABLE=""
 
 case "$PORT" in
   ''|*[!0-9]*)
@@ -18,19 +18,46 @@ if [ "$PORT" -lt 1024 ] || [ "$PORT" -gt 65535 ]; then
   exit 1
 fi
 
-if [ ! -d "$APP_PATH" ]; then
-  echo "Codex.app was not found at: $APP_PATH" >&2
+find_executable() {
+  candidate="$1"
+
+  if [ -x "$candidate/Contents/MacOS/ChatGPT" ]; then
+    APP_PATH="$candidate"
+    EXECUTABLE="$candidate/Contents/MacOS/ChatGPT"
+    return 0
+  fi
+
+  if [ -x "$candidate/Contents/MacOS/Codex" ]; then
+    APP_PATH="$candidate"
+    EXECUTABLE="$candidate/Contents/MacOS/Codex"
+    return 0
+  fi
+
+  return 1
+}
+
+if [ -n "$APP_PATH" ]; then
+  if ! find_executable "$APP_PATH"; then
+    echo "Could not find a ChatGPT or Codex executable in: $APP_PATH" >&2
+    exit 1
+  fi
+else
+  for candidate in /Applications/ChatGPT.app /Applications/Codex.app; do
+    if find_executable "$candidate"; then
+      break
+    fi
+  done
+fi
+
+if [ -z "$EXECUTABLE" ]; then
+  echo "ChatGPT.app or Codex.app was not found in /Applications." >&2
+  echo "Set CODEX_APP_PATH to the application bundle and try again." >&2
   exit 1
 fi
 
-if [ ! -x "$EXECUTABLE" ]; then
-  echo "Could not find the Codex executable at: $EXECUTABLE" >&2
-  exit 1
-fi
-
-if pgrep -x "Codex" >/dev/null 2>&1; then
-  echo "Codex is already running." >&2
-  echo "Close Codex first, then run this launcher again." >&2
+if pgrep -f 'ChatGPT.app' >/dev/null 2>&1 || pgrep -f 'Codex.app' >/dev/null 2>&1; then
+  echo "Codex or ChatGPT is already running." >&2
+  echo "Close it first, then run this launcher again." >&2
   exit 1
 fi
 
