@@ -11,8 +11,9 @@ This is an unofficial tool. Use it at your own risk.
 
 ## What it does
 
-Codex RTL Local opens Codex Desktop with a local Chromium DevTools port, then
-injects CSS and JavaScript into the renderer at runtime.
+Codex RTL Local opens Codex Desktop (now distributed as ChatGPT on recent
+macOS releases) with a local Chromium DevTools port, then injects CSS and
+JavaScript into the renderer at runtime.
 
 It does not modify the Codex app files.
 
@@ -110,7 +111,8 @@ It runs the same local launcher and writes logs to your temporary directory.
 Optional environment variables:
 
 ```bash
-CODEX_APP_PATH=/Applications/Codex.app
+# Optional: defaults to /Applications/ChatGPT.app, then /Applications/Codex.app
+CODEX_APP_PATH=/Applications/ChatGPT.app
 CODEX_RTL_PORT=9223
 CODEX_RTL_DELAY_MS=2500
 CODEX_RTL_POLL_MS=2000

@@ -2,14 +2,14 @@
 
 # Required parameters:
 # @raycast.schemaVersion 1
-# @raycast.title Open Codex RTL
+# @raycast.title Open Codex RTL in ChatGPT
 # @raycast.mode silent
 
 # Optional parameters:
 # @raycast.icon 🧭
 # @raycast.packageName Developer
 
-# @raycast.description Open Codex Desktop with local RTL support
+# @raycast.description Open Codex in ChatGPT with local RTL support
 # @raycast.author Gal
 
 APP="$HOME/Projects/codex-rtl-local/Codex RTL.app"
@@ -21,4 +21,4 @@ fi
 
 open "$APP"
 
-echo "Opening Codex RTL"
+echo "Opening Codex RTL in ChatGPT"

@@ -21,6 +21,22 @@ endpoint_ready() {
   /usr/bin/curl --silent --fail --max-time 1 "$ENDPOINT" >/dev/null 2>&1
 }
 
+app_is_running() {
+  /bin/ps -axo ucomm= | /usr/bin/awk '
+    {
+      name = $0
+      sub(/^[[:space:]]+/, "", name)
+      sub(/[[:space:]]+$/, "", name)
+
+      if (name == "ChatGPT" || name == "Codex") {
+        found = 1
+        exit
+      }
+    }
+    END { exit(found ? 0 : 1) }
+  '
+}
+
 if [ ! -x "$NODE" ]; then
   dialog "Node was not found at $NODE. Install Node 22+ or set CODEX_RTL_NODE."
   exit 1
@@ -32,8 +48,8 @@ if endpoint_ready; then
   exit 0
 fi
 
-if /usr/bin/pgrep -x "Codex" >/dev/null 2>&1; then
-  dialog "Codex is already open without the RTL launcher. Close Codex, then open Codex RTL again."
+if app_is_running; then
+  dialog "Codex or ChatGPT is already open without the RTL launcher. Recent Codex versions run inside ChatGPT.app. Quit the open Codex/ChatGPT window, then open Codex RTL again."
   exit 1
 fi
 
