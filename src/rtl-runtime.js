@@ -65,6 +65,16 @@
     "[class~='font-mono-default']"
   ].join(",");
 
+  const MATH_SELECTOR = [
+    "mjx-container",
+    ".MathJax",
+    ".MathJax_Display",
+    ".katex",
+    ".katex-display",
+    "math",
+    "[role='math']"
+  ].join(",");
+
   function ensureStyle() {
     let style = document.getElementById(STYLE_ID);
     if (!style) {
@@ -85,7 +95,7 @@
   }
 
   function isCodeLike(element) {
-    return Boolean(element?.closest?.(CODE_SELECTOR));
+    return Boolean(element?.closest?.(`${CODE_SELECTOR}, ${MATH_SELECTOR}`));
   }
 
   function isEditor(element) {
@@ -211,10 +221,20 @@
     });
   }
 
+  function forceMathLtr(root) {
+    if (root.matches?.(MATH_SELECTOR)) {
+      root.setAttribute("dir", "ltr");
+    }
+    root.querySelectorAll?.(MATH_SELECTOR).forEach((element) => {
+      element.setAttribute("dir", "ltr");
+    });
+  }
+
   function scan(root = document.body) {
     if (!(root instanceof HTMLElement)) return;
 
     forceCodeLtr(root);
+    forceMathLtr(root);
 
     if (root.matches?.(EDITOR_SELECTOR)) applyEditorDirection(root);
     root.querySelectorAll?.(EDITOR_SELECTOR).forEach(applyEditorDirection);
@@ -276,4 +296,3 @@
 
   window.__GAL_CODEX_RTL_ACTIVE__ = true;
 })();
-
