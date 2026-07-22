@@ -57,6 +57,25 @@
   display: inline-block;
 }
 
+/* Rendered math must keep its source order even inside an RTL message. */
+[data-gal-codex-rtl-root="true"] mjx-container,
+[data-gal-codex-rtl-root="true"] mjx-container *,
+[data-gal-codex-rtl-root="true"] .MathJax,
+[data-gal-codex-rtl-root="true"] .MathJax *,
+[data-gal-codex-rtl-root="true"] .MathJax_Display,
+[data-gal-codex-rtl-root="true"] .MathJax_Display *,
+[data-gal-codex-rtl-root="true"] .katex,
+[data-gal-codex-rtl-root="true"] .katex *,
+[data-gal-codex-rtl-root="true"] .katex-display,
+[data-gal-codex-rtl-root="true"] .katex-display *,
+[data-gal-codex-rtl-root="true"] math,
+[data-gal-codex-rtl-root="true"] math *,
+[data-gal-codex-rtl-root="true"] [role="math"],
+[data-gal-codex-rtl-root="true"] [role="math"] * {
+  direction: ltr !important;
+  unicode-bidi: isolate !important;
+}
+
 [data-gal-codex-rtl-root="true"] p,
 [data-gal-codex-rtl-root="true"] li,
 [data-gal-codex-rtl-root="true"] blockquote,
@@ -68,4 +87,3 @@
 [data-gal-codex-rtl-root="true"] h6 {
   unicode-bidi: plaintext !important;
 }
-
