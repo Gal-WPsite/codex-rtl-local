@@ -36,6 +36,22 @@ find_executable() {
   return 1
 }
 
+app_is_running() {
+  /bin/ps -axo ucomm= | /usr/bin/awk '
+    {
+      name = $0
+      sub(/^[[:space:]]+/, "", name)
+      sub(/[[:space:]]+$/, "", name)
+
+      if (name == "ChatGPT" || name == "Codex") {
+        found = 1
+        exit
+      }
+    }
+    END { exit(found ? 0 : 1) }
+  '
+}
+
 if [ -n "$APP_PATH" ]; then
   if ! find_executable "$APP_PATH"; then
     echo "Could not find a ChatGPT or Codex executable in: $APP_PATH" >&2
@@ -55,9 +71,9 @@ if [ -z "$EXECUTABLE" ]; then
   exit 1
 fi
 
-if pgrep -f 'ChatGPT.app' >/dev/null 2>&1 || pgrep -f 'Codex.app' >/dev/null 2>&1; then
+if app_is_running; then
   echo "Codex or ChatGPT is already running." >&2
-  echo "Close it first, then run this launcher again." >&2
+  echo "Recent Codex versions run inside ChatGPT.app. Quit the open Codex/ChatGPT window, then run this launcher again." >&2
   exit 1
 fi
 
